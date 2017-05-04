@@ -8,12 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main() {
-	PFLIGHT p_myflight = creatFlight(3, DOMESTIC , "TLV", FALSE);
-	printFlight(p_myflight);
-
-}
-
 PFLIGHT	creatFlight(int flight_num, FlightType flight_type , char* flight_dest, BOOL flight_emrgncy){
 	/* create new flight and initialize parameters */
 	if (flight_num > MAX_ID){

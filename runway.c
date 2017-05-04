@@ -6,6 +6,8 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "runway.h"
 
 RUNWAY* createRunway(int runway_num, FlightType runway_type) {
@@ -99,11 +101,11 @@ Result addFlight(RUNWAY* pRunway, FLIGHT* pFlight) {
 	}
 	
 	// Copy flight:
-	FLIGHT* pFlightCopied;
+	FLIGHT* pFlightCopied = NULL;
 	if (NULL == copyFlight(pFlight, pFlightCopied)) {
 		return FAILURE;
 	}
-
+	
 	FLIGHTS_LIST* pList = pRunway->runway_list;
 	FLIGHTS_LIST* pLastList = pList;
 
@@ -119,10 +121,23 @@ Result addFlight(RUNWAY* pRunway, FLIGHT* pFlight) {
 	}
 
 	// Find a place to enter the new flight:
-	if (pFlight->flight_emrgncy) {		
-		while ((pList != NULL) && (pList->pFlight->flight_emrgncy)) {
-			pLastList = pList;
-			pList = pList->pNext;
+	// If the flight is an Emergency:
+	if (TRUE == pFlight->flight_emrgncy) {		
+		// If there is no Emergency Flights on the list:
+		if (FALSE == pList->pFlight->flight_emrgncy) {
+			pRunway->runway_list = (FLIGHTS_LIST*)malloc(sizeof(FLIGHTS_LIST));
+			if (NULL == pRunway->runway_list) {
+				return FAILURE;
+			}
+			pRunway->runway_list->pFlight = pFlightCopied;
+			pRunway->runway_list->pNext = pList;
+			return SUCCESS;
+		}
+		else {
+			while ((pList != NULL) && (TRUE == pList->pFlight->flight_emrgncy)) {
+				pLastList = pList;
+				pList = pList->pNext;
+			}
 		}
 	}
 	else {
@@ -132,7 +147,7 @@ Result addFlight(RUNWAY* pRunway, FLIGHT* pFlight) {
 		}
 	}
 
-	// Enter the flight:
+	// Enter the flight in the place:
 	pLastList->pNext = (FLIGHTS_LIST*)malloc(sizeof(FLIGHTS_LIST));
 	if (NULL == pLastList->pNext) {
 		return FAILURE;
@@ -141,7 +156,7 @@ Result addFlight(RUNWAY* pRunway, FLIGHT* pFlight) {
 	pLastList->pNext->pNext = pList;
 
 	return SUCCESS;
-}
+}	// ***  End of: addFlight  ***
 
 
 Result removeFlight(RUNWAY* pRunway, int flightCode) {
@@ -153,8 +168,16 @@ Result removeFlight(RUNWAY* pRunway, int flightCode) {
 	// Set default pointers:
 	FLIGHTS_LIST* pList = pRunway->runway_list;
 	FLIGHTS_LIST* pLastList = pList;
+	
+	// If the flight is the first one:
+	if (flightCode == pList->pFlight->flight_num) {
+		destroyFlight(pList->pFlight);
+		pRunway->runway_list = pList->pNext;
+		free(pList);
+		return SUCCESS;
+	}
 
-	// Find flight:
+	// Find flight and remove:
 	while (pList != NULL) {
 		if (flightCode == pList->pFlight->flight_num) {
 			destroyFlight(pList->pFlight);
@@ -167,7 +190,7 @@ Result removeFlight(RUNWAY* pRunway, int flightCode) {
 	}
 
 	return FAILURE;
-}
+}	// ***  End of: removeFlight  ***
 
 
 Result depart(RUNWAY* pRunway) {
@@ -177,7 +200,7 @@ Result depart(RUNWAY* pRunway) {
 	}
 
 	return removeFlight(pRunway, pRunway->runway_list->pFlight->flight_num);
-}
+}	// ***  End of: depart  ***
 
 
 void printRunway(RUNWAY* pRunway) {
@@ -198,5 +221,4 @@ void printRunway(RUNWAY* pRunway) {
 		pList = pList->pNext;
 	}
 
-}
-
+}	// ***  End of: printRunway  ***

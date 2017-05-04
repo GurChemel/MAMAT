@@ -4,13 +4,8 @@
 #include "ex2.h"
 #include "flight.h"
 
-#ifndef NULL
-#define NULL -1
-#endif // !NULL
-
-
 typedef struct _FLIGHTS_LIST {
-	FLIGHT*					pFlight;
+	PFLIGHT					pFlight;
 	struct _FLIGHTS_LIST*	pNext;
 }FLIGHTS_LIST;
 
@@ -24,9 +19,9 @@ RUNWAY* createRunway(int runway_num, FlightType runway_type);
 void destroyRunway(RUNWAY* pRunway);
 BOOL isFlightExist(RUNWAY* pRunway, int flightCode);
 int getFlightNum(RUNWAY* pRunway);
-Result addFlight(RUNWAY* pRunway, FLIGHT* pFlight);
+Result addFlight(RUNWAY* pRunway, PFLIGHT pFlight);
 Result removeFlight(RUNWAY* pRunway, int flightCode);
 Result depart(RUNWAY* pRunway);
 void printRunway(RUNWAY* pRunway);
 
-#endif _RUNWAY_H
+#endif
