@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Check for number of input parameters.
+if [[ $# -ne 2 ]]; then
+	echo "Not enough parameters"
+	exit 1
+fi
+
+# Set parameters.
+dir=$1
+letter=$2
+
+# Check if the direcrtory exist.
+if [[ ! -d "./${dir}" ]]; then
+	echo "Directory does not exist"
+	exit 1
+fi
+
+# Find all files in subdirectories that start with $letter (-i = lowercase and uppercase).
+count=`find ./${dir} -iname "${letter}*" | wc -l`
+echo "${count}"
