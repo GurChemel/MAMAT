@@ -6,6 +6,7 @@
 #include "flight.h"
 #include "runway.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 
 typedef struct _RUNWAY_LIST {
@@ -13,8 +14,8 @@ typedef struct _RUNWAY_LIST {
 	struct _RUNWAY_LIST*	nextRunway;
 }RUNWAY_LIST;
 
-Result	addRunway(int new_num, FlightType flight_type);
-Result	removeRunway(int kill_num);
+Result addRunway(int,FlightType);
+Result removeRunway(int);
 int		getRunwayNum();
 Result	addFlightToAirport(int flight_code, FlightType flight_type, char dest[4],BOOL flight_emrgncy);
 Result	departFromRunway(int runway_num, int num_of_flights);
