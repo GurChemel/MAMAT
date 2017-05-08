@@ -19,7 +19,7 @@ typedef struct _FLIGHT {
 PFLIGHT	creatFlight(int, FlightType, char*, BOOL);
 void 	destroyFlight(PFLIGHT);
 void	printFlight(PFLIGHT);
-PFLIGHT copyFlight(PFLIGHT, PFLIGHT);
-
+PFLIGHT	copyFlight(PFLIGHT, PFLIGHT);
+int 	is_DestLegal(char* str);
 #endif
 

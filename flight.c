@@ -8,17 +8,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-PFLIGHT	creatFlight(int flight_num, FlightType flight_type , char* flight_dest, BOOL flight_emrgncy){
+
+PFLIGHT creatFlight(int flight_num, FlightType flight_type, char* flight_dest,BOOL flight_emrgncy) {
 	/* create new flight and initialize parameters */
-	if (flight_num > MAX_ID) {
+	//checking if flight num is valid
+	if ((flight_num > MAX_ID)||(is_DestLegal(flight_dest)==0)) {
 		return NULL;
 	}
 	PFLIGHT pFlight;
+	//allocating memory
 	pFlight = (PFLIGHT) malloc(sizeof(FLIGHT));
 	if (pFlight == NULL) {
 		return NULL;
 	}
-	//FLIGHT flight = *pFlight;
+	// initializing flight
 	pFlight->flight_num = flight_num;
 	pFlight->flight_type = flight_type;
 	strcpy(pFlight->flight_dest, flight_dest);
@@ -70,3 +73,17 @@ PFLIGHT copyFlight(PFLIGHT flight_src, PFLIGHT flight_copied) {
 	return flight_copied;
 }
 
+// Check if a sting contain legally writen destination:
+int is_DestLegal(char* str) {
+	int i;
+	int len = strlen(str);
+	if (len != 3) {
+		return 0;
+	}
+	for (i = 0; i < len; i++) {
+		if (!isupper(str[i])) {
+			return 0;
+		}
+	}
+	return 1;
+}
