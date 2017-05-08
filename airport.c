@@ -103,6 +103,10 @@ Result	addFlightToAirport(int flight_code, FlightType flight_type, char dest[4],
 	if (runway==NULL){return FAILURE;}//airport is empty
 
 	while (listElement != NULL){
+		// refreshing parameters
+		runway 		= listElement->thisRunway;
+		next 		= listElement->nextRunway;
+		//----
 		if(isFlightExist(runway, flight_code)==TRUE){return FAILURE;}//flight with the same number already exist
 
 		int numFlights = getFlightNum(runway);
@@ -116,9 +120,7 @@ Result	addFlightToAirport(int flight_code, FlightType flight_type, char dest[4],
 			}
 		}
 
-		listElement = next;
-		runway 		= listElement->thisRunway;
-		next 		= listElement->nextRunway;
+		listElement = next;//moving down the lis
 	}
 
 	if (addtoRunway == NULL){return FAILURE;}// no runway found fit
@@ -135,6 +137,10 @@ Result	departFromRunway(int runway_num, int num_of_flights){
 	if (runway == NULL){return FAILURE;}//airport empty
 
 	while(listElement != NULL){
+		// refreshing parameters
+		runway 		= listElement->thisRunway;
+		next 		= listElement->nextRunway;
+		//-----
 
 		if((runway->runway_num == runway_num) && (getFlightNum(runway)>=num_of_flights)){//finding the correct runway and checking for enough flights
 			for(int i = 0 ; i < num_of_flights ; i++){
@@ -143,9 +149,8 @@ Result	departFromRunway(int runway_num, int num_of_flights){
 			}
 			return SUCCESS;
 		}
-	listElement = next;
-	runway 		= listElement->thisRunway;
-	next 		= listElement->nextRunway;
+	listElement = next;//moving down the list
+
 	}
 	return FAILURE;
 
@@ -158,32 +163,129 @@ Result	changeDest(char origin_dest[4], char new_dest[4]){
 
 	if((is_DestLegal(origin_dest)==0) || (is_DestLegal(new_dest)==0)){return FAILURE;}// illegal destination
 	while(listElement != NULL){
+		//--- parameters of outer while loop
+		runway 		= listElement->thisRunway;
+		next 		= listElement->nextRunway;
+		//-------
+		// initializing parameters for inner while loop
 		char*			destination 	= runway->runway_list->pFlight->flight_dest;
 		FLIGHTS_LIST*	flightElement	= runway->runway_list;
 		FLIGHTS_LIST*	nextflight		= runway->runway_list->pNext;
+
 		while(flightElement != NULL){
+			// refreshing parameters
+			destination		= flightElement->pFlight->flight_dest;
+			nextflight		= flightElement->pNext;
+			//-----
 			if (strcmp(destination, origin_dest)==0){
 				int len=strlen(origin_dest);
 				for(int i =0; i<=len; i++){
 					runway->runway_list->pFlight->flight_dest[i]=new_dest[i];
 				}
 			}
-			flightElement	= nextflight;
-			destination		= flightElement->pFlight->flight_dest;
-			nextflight		= flightElement->pNext;
+			flightElement	= nextflight;//moving down the list
+
 		}
-		listElement = next;
-		runway 		= listElement->thisRunway;
-		next 		= listElement->nextRunway;
+		listElement = next;//moving down the list
+
 	}
 	return SUCCESS;
 
+}/* End Of changeDest */
+
+Result	delay(char dest_name[4]){
+
+	if (is_DestLegal(dest_name) != 1){return FAILURE;}// destination is illegal
+	// initializing pointers for the runways list
+	RUNWAY* 	 runway		 = airPort->thisRunway;
+	RUNWAY_LIST* listElement = &airPort;
+	RUNWAY_LIST* next		 = airPort->nextRunway;
+	//---
+	if(runway==NULL){return FAILURE;}//airport is empty
+	while(listElement != NULL){
+		//--- parameters of outer while loop
+		runway 		= listElement->thisRunway;
+		next 		= listElement->nextRunway;
+		//-------
+		int numofFlights = getFlightNum(runway);
+		if (numofFlights>=1){//runway isn't empty
+
+			PFLIGHT flights2dest = (PFLIGHT)malloc(numofFlights*(sizeof(FLIGHT)));//array for saving pointers of flight with destination=dest_name
+			if (flights2dest == NULL){return FAILURE;}
+
+			// initializing pointers to go over each runway flight list
+			PFLIGHT flight	= runway->runway_list->pFlight;
+			FLIGHTS_LIST* listflight = runway->runway_list;
+			FLIGHTS_LIST* nextflight = listflight->pNext;
+			int i = 0;//indexing the array
+			while(listflight != NULL){
+				//refreshing pointers
+				flight		= listflight->pFlight;
+				nextflight	= listflight->pNext;
+				//----
+				if (strcmp(flight->flight_dest,dest_name)==0){
+					copyflight(flight, flights2dest[i]);
+					i++;
+				}
+
+				listflight	= nextflight;//moving down the list
+
+			}//end of inner while loop
+
+			int matchingFlights = i+1;//the number of matching flights in this runway
+
+			for (i = 0; i < matchingFlights; i++){//removing delayed flights from runway
+				Result rmResult = removeFlight(runway, flights2dest[i]->flight_num);
+				if (rmResult == FAILURE){return FAILURE;}
+			}
+			for (i = 0; i < matchingFlights; i++){// adding delayed flights to run way by order
+				Result addResult = addFlight(runway, flights2dest[i]);
+				if (addResult == FAILURE){return FAILURE;}
+				i++;}
+			for (i = 0; i < numofFlights; i++){// freeing the flights array allocated for this runway iteration
+				free(flights2dest[i]);
+			}free(flights2dest);
+		}// end of if run way isnt empty
+
+		listElement = next;
+
+	}//end of outer while loop
+	return SUCCESS;
+}/* End Of Delay */
+
+void	printAirport(){
+	printf("Airport status:\n");
+	// setting default pointers
+	RUNWAY* 	 runway		 = airPort->thisRunway;
+	RUNWAY_LIST* listElement = &airPort;
+	RUNWAY_LIST* next		 = airPort->nextRunway;
+	if (runway == NULL){return;}
+	while (listElement != NULL){
+		runway 	= listElement->thisRunway;
+		next	= listElement->nextRunway;
+		printRunway(runway);
+		listElement = next;
+
+	}
+return;
 }
 
+void destroyAirport(){
+	// setting default pointers
+	RUNWAY* 	 runway		 = airPort->thisRunway;
+	RUNWAY_LIST* listElement = &airPort;
+	RUNWAY_LIST* next		 = airPort->nextRunway;
+	if (runway == NULL){return;}
+	while (listElement != NULL){
+		runway 	= listElement->thisRunway;
+		next	= listElement->nextRunway;
+		destroyRunway(runway);
+		free(listElement);
+		listElement = next;
 
-
-
-
+	}
+return;
+}
 
 
 

@@ -20,8 +20,8 @@ Result	addFlightToAirport(int flight_code, FlightType flight_type, char dest[4],
 Result	departFromRunway(int runway_num, int num_of_flights);
 Result	changeDest(char origin_dest[4], char new_dest[4]);
 Result	delay(char dest_name[4]);
-void	printAirport(RUNWAY_LIST airPort);
-void	destroyAirport(RUNWAY_LIST airPort);
+void	printAirport();
+void	destroyAirport();
 
 
 #endif
