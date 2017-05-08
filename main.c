@@ -1,4 +1,4 @@
-﻿
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -83,7 +83,7 @@ int main() {
 					intOrDom = DOMESTIC;
 			}
 			// Execute command:
-			if (FAILURE == addRunway‬‬(runwayNumber,intOrDom)) {
+			if (FAILURE == addRunway(runwayNumber,intOrDom)) {
 				fprintf(stderr, "Insert execution failed.\n");
 			}
 		}
@@ -103,7 +103,7 @@ int main() {
 			// Set parameters:
 			runwayNumber = atoi(pArgA);
 			// Execute command:
-			if (FAILURE == removeRunway‬‬(runwayNumber)) {
+			if (FAILURE == removeRunway(runwayNumber)) {
 				fprintf(stderr, "Remove execution failed.\n");
 			}
 		}
@@ -207,14 +207,14 @@ int main() {
 			******************************* */
 		else if (strcmp(pCommand, "Print") == 0) {
 			// Execute command:
-			printAirport(airPort);
+			printAirport();
 		}
 		/*	*******************************
 					Exit
 			******************************* */
 		else if (strcmp(pCommand, "Exit") == 0) {
 			// Execute command:
-			destroyAirport(airPort);
+			destroyAirport();
 			return 0;
 		}
 		else {
