@@ -1,8 +1,9 @@
-
+﻿
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "airport.h"
 #include "runway.h"
 #include "flight.h"
 #include "ex2.h"
@@ -44,7 +45,8 @@ int main() {
 
 	// Initialize arguments:
 	int runwayNumber, flightNumber, numOfFlights;
-	char intOrDomType, emergency;
+	BOOL emergency;
+	FlightType intOrDom;
 
 	while (fgets(szLine, MAX_LINE_SIZE, stdin)) {
 		// Parse arguments:
@@ -59,6 +61,9 @@ int main() {
 		}
 
 		// Find command:
+		/*	*******************************
+					Insert
+		  	******************************* */
 		if (strcmp(pCommand, "Insert") == 0) {
 			// Validate inputs:
 			if ((pArgA == NULL) || (pArgB == NULL)) {
@@ -71,9 +76,20 @@ int main() {
 			}
 			// Set parameters:
 			runwayNumber = atoi(pArgA);
-			intOrDomType = *pArgB;
-
+			switch (*pArgB) {
+				case 'I':
+					intOrDom = INTERNATIONAL;
+				case 'D':
+					intOrDom = DOMESTIC;
+			}
+			// Execute command:
+			if (FAILURE == addRunway‬‬(runwayNumber,intOrDom)) {
+				fprintf(stderr, "Insert execution failed.\n");
+			}
 		}
+		/*	*******************************
+					Remove
+			******************************* */
 		else if (strcmp(pCommand, "Remove") == 0) {
 			// Validate inputs:
 			if (pArgA == NULL) {
@@ -86,8 +102,14 @@ int main() {
 			}
 			// Set parameters:
 			runwayNumber = atoi(pArgA);
-
+			// Execute command:
+			if (FAILURE == removeRunway‬‬(runwayNumber)) {
+				fprintf(stderr, "Remove execution failed.\n");
+			}
 		}
+		/*	*******************************
+					Add
+			******************************* */
 		else if (strcmp(pCommand, "Add") == 0) {
 			// Validate inputs:
 			if ((pArgA == NULL) || (pArgB == NULL) || (pArgC == NULL) || (pArgD == NULL)) {
@@ -100,10 +122,27 @@ int main() {
 			}
 			// Set parameters:
 			flightNumber = atoi(pArgA);
-			intOrDomType = *pArgB;
+			switch (*pArgB) {
+				case 'I':
+					intOrDom = INTERNATIONAL;
+				case 'D':
+					intOrDom = DOMESTIC;
+			}
 			// destination = *pArgC;
-			emergency = *pArgD;
+			switch (*pArgD) {
+				case 'E':
+					emergency = TRUE;
+				case 'R':
+					emergency = FALSE;
+			}
+			// Execute command:
+			if (FAILURE == addFlightToAirport(flightNumber, intOrDom, pArgC, emergency)) {
+				fprintf(stderr, "Add execution failed.\n");
+			}
 		}
+		/*	*******************************
+					Depart
+			******************************* */
 		else if (strcmp(pCommand, "Depart") == 0) {
 			// Validate inputs:
 			if ((pArgA == NULL) || (pArgB == NULL)) {
@@ -117,8 +156,14 @@ int main() {
 			// Set parameters:
 			runwayNumber = atoi(pArgA);
 			numOfFlights = atoi(pArgB);
-
+			// Execute command:
+			if (FAILURE == departFromRunway(runwayNumber, numOfFlights)) {
+				fprintf(stderr, "Depart execution failed.\n");
+			}
 		}
+		/*	*******************************
+					Change
+			******************************* */
 		else if (strcmp(pCommand, "Change") == 0) {
 			// Validate inputs:
 			if ((pArgA == NULL) || (pArgB == NULL)) {
@@ -131,8 +176,15 @@ int main() {
 			}
 			// destination = *pArgA;
 			// newDestination = *pArgB;
-
+			
+			// Execute command:
+			if (FAILURE == changeDest(pArgA, pArgB)) {
+				fprintf(stderr, "Change execution failed.\n");
+			}
 		}
+		/*	*******************************
+					Delay
+			******************************* */
 		else if (strcmp(pCommand, "Delay") == 0) {
 			// Validate inputs:
 			if (pArgA == NULL) {
@@ -144,12 +196,25 @@ int main() {
 				continue;
 			}
 			// destination = *pArgA;
-
+			
+			// Execute command:
+			if (FAILURE == delay(pArgA)) {
+				fprintf(stderr, "Delay execution failed.\n");
+			}
 		}
+		/*	*******************************
+					Print
+			******************************* */
 		else if (strcmp(pCommand, "Print") == 0) {
-
+			// Execute command:
+			printAirport(airPort);
 		}
+		/*	*******************************
+					Exit
+			******************************* */
 		else if (strcmp(pCommand, "Exit") == 0) {
+			// Execute command:
+			destroyAirport(airPort);
 			return 0;
 		}
 		else {

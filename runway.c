@@ -195,7 +195,7 @@ Result removeFlight(RUNWAY* pRunway, int flightCode) {
 
 Result depart(RUNWAY* pRunway) {
 	// Check for valid inputs:
-	if ((pRunway == NULL) || (pRunway->runway_list == NULL)) {
+	if ((pRunway == NULL) || (pRunway->runway_list == NULL) || (getFlightNum(pRunway)==0) ) {
 		return FAILURE;
 	}
 
