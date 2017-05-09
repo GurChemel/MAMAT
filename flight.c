@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <ctype.h>
 
 PFLIGHT creatFlight(int flight_num, FlightType flight_type, char* flight_dest,BOOL flight_emrgncy) {
 	/* create new flight and initialize parameters */
@@ -50,7 +50,7 @@ void printFlight(PFLIGHT pFlight) {
 	} else {
 		emergency = 'R';
 	}
-	printf("Flight %d %c %s %c \n", pFlight->flight_num, type,
+	printf("Flight %d %c %s %c\n", pFlight->flight_num, type,
 			pFlight->flight_dest, emergency);
 }
 

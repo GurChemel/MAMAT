@@ -49,6 +49,7 @@ int main() {
 	FlightType intOrDom;
 
 	while (fgets(szLine, MAX_LINE_SIZE, stdin)) {
+		//fprintf(stderr, szLine);
 		// Parse arguments:
 		pCommand = strtok(szLine, delimiters);
 		pArgA = strtok(NULL, delimiters);
@@ -76,11 +77,13 @@ int main() {
 			}
 			// Set parameters:
 			runwayNumber = atoi(pArgA);
-			switch (*pArgB) {
+			switch (*pArgB) {//----------------------- added break -------------------------------
 				case 'I':
 					intOrDom = INTERNATIONAL;
+					break;
 				case 'D':
 					intOrDom = DOMESTIC;
+					break;
 			}
 			// Execute command:
 			if (FAILURE == addRunway(runwayNumber,intOrDom)) {
@@ -122,18 +125,28 @@ int main() {
 			}
 			// Set parameters:
 			flightNumber = atoi(pArgA);
+			
+			if ((flightNumber<1) || (flightNumber>MAX_ID)) {
+				fprintf(stderr, "Add execution failed.\n");
+				continue;
+			}
+			
 			switch (*pArgB) {
 				case 'I':
 					intOrDom = INTERNATIONAL;
+					break;
 				case 'D':
 					intOrDom = DOMESTIC;
+					break;
 			}
 			// destination = *pArgC;
 			switch (*pArgD) {
 				case 'E':
 					emergency = TRUE;
+					break;
 				case 'R':
 					emergency = FALSE;
+					break;
 			}
 			// Execute command:
 			if (FAILURE == addFlightToAirport(flightNumber, intOrDom, pArgC, emergency)) {

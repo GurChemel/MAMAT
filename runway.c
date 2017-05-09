@@ -18,7 +18,7 @@ RUNWAY* createRunway(int runway_num, FlightType runway_type) {
 	
 	// Allocate memory:
 	RUNWAY* pRunway = (RUNWAY*)malloc(sizeof(RUNWAY));
-	if (printRunway == NULL) {
+	if (pRunway == NULL) {
 		return NULL;
 	}
 	
@@ -102,7 +102,8 @@ Result addFlight(RUNWAY* pRunway, FLIGHT* pFlight) {
 	
 	// Copy flight:
 	FLIGHT* pFlightCopied = NULL;
-	if (NULL == copyFlight(pFlight, pFlightCopied)) {
+	pFlightCopied = copyFlight(pFlight, pFlightCopied);
+	if (NULL == pFlightCopied) {
 		return FAILURE;
 	}
 	
@@ -195,7 +196,7 @@ Result removeFlight(RUNWAY* pRunway, int flightCode) {
 
 Result depart(RUNWAY* pRunway) {
 	// Check for valid inputs:
-	if ((pRunway == NULL) || (pRunway->runway_list == NULL) || (getFlightNum(pRunway)==0) ) {
+	if ((pRunway == NULL) || (pRunway->runway_list == NULL)) {
 		return FAILURE;
 	}
 
