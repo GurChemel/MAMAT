@@ -41,6 +41,7 @@ void destroyRunway(RUNWAY* pRunway) {
 	// Free flight list:
 	while (pList != NULL) {
 		next = pList->pNext;
+		destroyFlight(pList->pFlight);
 		free(pList);
 		pList = next;
 	}

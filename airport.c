@@ -147,6 +147,7 @@ Result	addFlightToAirport(int flight_code, FlightType flight_type, char dest[4],
 	if (addtoRunway == NULL){return FAILURE;}// no runway found fit
 	PFLIGHT newflight = creatFlight(flight_code, flight_type, dest, flight_emrgncy);
 	Result addFlightResult = addFlight(addtoRunway->thisRunway,newflight);
+	free(newflight);
 	return addFlightResult;
 }/* End Of addFlightToAirport */
 
