@@ -66,10 +66,11 @@ Result	ListAdd(PList list, PElement old_element) {
 Result	ListRemove(PList list, PElement element) {
 	// Check Input:
 	if ((list == NULL) || (element == NULL) || (list->head == NULL)) return FAIL;
-	list->current = list->head->next;
+	list->current = list->head;
 
 	// Check if the element is the first one:
 	if (TRUE == list->compare_fun(list->current->element, element)) {
+		if (list->iterator == list->current) { list->iterator = list->iterator->next; };
 		list->destroy_fun(list->current->element);
 		list->head = list->current->next;
 		free(list->current);
@@ -80,6 +81,7 @@ Result	ListRemove(PList list, PElement element) {
 	PNode prev_node = list->head;
 	while (list->current != NULL) {
 		if (TRUE == list->compare_fun(list->current->element, element)) {
+			if (list->iterator == list->current) { list->iterator = list->iterator->next; }; 
 			list->destroy_fun(list->current->element);
 			prev_node->next = list->current->next;
 			free(list->current);
@@ -118,7 +120,6 @@ PElement	ListGetNext(PList list) {
 };	// End of ListGetNext
 
 BOOL		ListCompare(PList list_a, PList list_b) {
-	if ((list_a == NULL) && (list_b == NULL)) return TRUE;	// Both are NULL.
 	if ((list_a == NULL) || (list_b == NULL)) return FALSE;
 	if (list_a->elementsNum != list_b->elementsNum) return FALSE;
 	if ((list_a->head == NULL) && (list_b->head == NULL)) return TRUE; // Both have 0 elements.
@@ -136,6 +137,7 @@ void		ListPrint(PList list) {
 	list->current = list->head;
 	while (list->current != NULL) {
 		list->print_fun(list->current->element);
+		list->current = list->current->next;
 	}
 	printf("\n");
 };	// End of ListPrint
