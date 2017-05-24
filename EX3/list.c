@@ -22,7 +22,7 @@ typedef struct List_ {
 } LIST;
 
 PList ListCreate(clone clFun, destroy deFun, compare coFun, print prFun) {
-	PList list = (PList)malloc(sizeof(PList));
+	PList list = (PList)malloc(sizeof(LIST));
 	if (list == NULL) return NULL;
 	list->head = NULL;
 	list->current = list->head;
@@ -39,10 +39,11 @@ Result	ListAdd(PList list, PElement old_element) {
 	// Check Input:
 	if ((list == NULL) || (old_element == NULL)) return FAIL;
 	// Create new node:
-	PNode	new_node = (PNode)malloc(sizeof(PNode));
-	if (new_node == NULL) return NULL;
+	PNode	new_node = (PNode)malloc(sizeof(Node));
+	if (new_node == NULL) return FAIL;
 	// Make a clone of the element:
-	if ((list->clone_fun(new_node->element, old_element))==FAIL) return FAIL;
+	new_node->element = list->clone_fun(old_element);
+	if (new_node->element == NULL) return FAIL;
 	new_node->next = NULL;
 
 	// Enter node to list:
@@ -95,7 +96,7 @@ Result	ListRemove(PList list, PElement element) {
 };	// End of ListRemove
 
 void ListDestroy(PList list) {
-	if (list == NULL) return FAIL;
+	if (list == NULL) return;
 	list->current = list->head;
 	while (list->current != NULL) {
 		list->destroy_fun(list->current->element);

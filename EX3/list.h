@@ -1,17 +1,16 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 #include "defs.h"
-#include "person.h"
 
 typedef void* PElement;
 typedef struct List_* PList;
 
-typedef Result(*clone)(PElement, PElement);
-typedef void(*destroy)(PElement);
-typedef BOOL(*compare)(PElement, PElement);
-typedef void(*print)(PElement);
+typedef PElement (*clone)(PElement);
+typedef void (*destroy)(PElement);
+typedef BOOL (*compare)(PElement, PElement);
+typedef void (*print)(PElement);
 
-PList		ListCreate(clone, destroy, compare, print);
+PList		ListCreate(clone clFun, destroy deFun, compare coFun, print prFun);
 Result		ListAdd(PList list, PElement element);
 Result		ListRemove(PList list, PElement element);
 void		ListDestroy(PList list);
