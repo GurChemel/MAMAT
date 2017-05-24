@@ -128,6 +128,8 @@ BOOL		ListCompare(PList list_a, PList list_b) {
 	list_b->current = list_b->head->next;
 	while (list_a->current != NULL) {
 		if (FALSE == list_a->compare_fun(list_a->current->element, list_b->current->element)) return FALSE;
+		list_a->current = list_a->current->next;
+		list_b->current = list_b->current->next;
 	};
 	return TRUE;	// Every element is equal.
 
