@@ -26,23 +26,28 @@ PPerson PersonCreate(char* perName, int perAge, int perID) {
 	return new_person;
 };
 
-void	destroyPerson(PPerson toKill) {
-	if (toKill == NULL) return;
-	free(toKill->name);
-	free(toKill);
+void	destroyPerson(void* toKill) {
+	PPerson perToKill = (PPerson)toKill;
+	if (perToKill == NULL) return;
+	free(perToKill->name);
+	free(perToKill);
 	return;
 };
 
-PPerson clonePerson(PPerson old_person) {
+PPerson clonePerson(void* source) {
+	PPerson old_person = (PPerson)source;
 	return PersonCreate(old_person->name, old_person->age, old_person->ID);
 };
 
-BOOL	comparePersons(PPerson perA, PPerson perB) {
+BOOL	comparePersons(void* sourceA, void* sourceB) {
+	PPerson perA = (PPerson)sourceA;
+	PPerson perB = (PPerson)sourceB;
 	if ((perA == NULL) || (perB == NULL)) return FALSE;
 	return (perA->ID == perB->ID);
 };
 
-void	printPerson(PPerson toPrint) {
-	printf("Name: %s, ID: %d, Age %d\n", toPrint->name, toPrint->ID, toPrint->age);
+void	printPerson(void* toPrint) {
+	PPerson perToPrint = (PPerson)toPrint;
+	printf("Name: %s, ID: %d, Age %d\n", perToPrint->name, perToPrint->ID, perToPrint->age);
 };
 

@@ -4,10 +4,10 @@
 typedef struct Person_ Person,*PPerson;
 
 PPerson PersonCreate(char* perName, int perAge, int perID);
-void	printPerson(PPerson);
-PPerson clonePerson(PPerson);
-void	destroyPerson(PPerson);
-BOOL	comparePersons(PPerson,PPerson);
+void	printPerson(void*);
+PPerson clonePerson(void*);
+void	destroyPerson(void*);
+BOOL	comparePersons(void*, void*);
 
 
 #endif
