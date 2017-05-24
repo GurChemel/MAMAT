@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Check for number of input parameters.
+if [[ $# -ne 3 ]]; then
+        echo "Parameters Error"
+        exit 1
+fi
+
+# Set parameters.
+comp=$1
+prog=$2
+extn=$3
+
+if [[ -f makefile ]]; then
+        if [[ ! -f makefile.old ]]; then
+                mv -f makefile makefile.old
+        fi
+fi
+
+objects=`${comp} -MM *${extn} | cut -d ":" -f 1 | tr "\n" " "`
+
+echo "CC = ${comp}" > makefile
+echo "CFLAGS = -g -Wall" >> makefile
+echo "CCLINK = \$(CC)" >> makefile
+echo "LIBS =" >> makefile
+echo "OBJS = ${objects}" >> makefile
+echo "RM = rm -f" >> makefile
+echo "" >> makefile
+echo "${prog}: \$(OBJS)" >> makefile
+echo "	\$(CCLINK) -o ${prog} \$(OBJS) \$(LIBS)" >> makefile
+echo "" >> makefile
+${comp} -MM *${extn} >> makefile
+echo "" >> makefile
+echo "clean:" >> makefile
+echo "	\$(RM) ${prog} *.o *.bak *~ \"#\"* core" >> makefile
