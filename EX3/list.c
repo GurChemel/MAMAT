@@ -14,7 +14,7 @@ typedef struct List_ {
 	PNode	iterator;
 	PNode	current;
 	int		elementsNum;
-	// Funtions:
+	// Functions:
 	clone	clone_fun;
 	destroy	destroy_fun;
 	compare	compare_fun;
@@ -145,3 +145,18 @@ void		ListPrint(PList list) {
 	printf("\n");
 };	// End of ListPrint
 
+int 		ListNumElements(PList list){
+	//checking input
+
+	if (list == NULL){
+		return 0;
+	}
+	else{
+		return list->elementsNum;
+	}
+}; // End Of ListNumElements
+
+BOOL		ListIsEmpty(PList list){
+	if (list == NULL || list->head == NULL) return TRUE; // either list pointer is NULL or list is empty
+	return FALSE; // list not empty
+}; // End Of ListIsEmpty

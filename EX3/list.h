@@ -18,5 +18,7 @@ PElement	ListGetFirst(PList list);
 PElement	ListGetNext(PList list);
 BOOL		ListCompare(PList list_a, PList list_b);
 void		ListPrint(PList list);
+int 		ListNumElements(PList list);
+BOOL		ListIsEmpty(PList list);
 
 #endif
