@@ -87,13 +87,14 @@ void 	 ClusterPrint(PCluster cluster){
 	}// from here minDist should hold the minimum distance value
 
 
-	printf("Cluster's dimension: %d", dim);
+	printf("Cluster's dimension: %d\n", dim);
 	int i =0;
 	pointA = (PPoint)ListGetFirst(cluster->pointsList);
 	for (i=0;i<pointsNumber;i++){
 		printPoint(pointA);
+		pointA = (PPoint)ListGetNext(cluster->pointsList);
 	}
-	printf("\nMinimun Square Distance: %d", minDist);
+	printf("\nMinimum Square Distance: %d\n", minDist);
 
 	return;
 }

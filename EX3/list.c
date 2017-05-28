@@ -110,6 +110,7 @@ void ListDestroy(PList list) {
 PElement	ListGetFirst(PList list) {
 	if (list == NULL) return NULL;
 	list->iterator = list->head;
+	if (list->head == NULL) return NULL; // incase List is empty
 	return list->head->element;
 };	// End of ListGetFirst
 

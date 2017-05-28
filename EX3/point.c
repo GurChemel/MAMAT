@@ -74,8 +74,8 @@ int PointGetNextCoordinates(PPoint point){
 void PointPrint(PPoint point){
 	//checking input
 	if (point == NULL || point->coordsList == NULL ) return;
-	if (ListIsEmpty(point->coordsList)) return;
-	printf("Point Dimension: %d, Size: %d, Coordinates:",point->dimension, ListNumElements(point->coordsList));
+	//if (ListIsEmpty(point->coordsList)) return;
+	printf("Point Dimension: %d, Size: %d, Coordinates: ",point->dimension, ListNumElements(point->coordsList));
 	ListPrint(point->coordsList);
 }
 
@@ -156,7 +156,7 @@ void printCoordinate(void* coordPrint){
 	//checking input
 	if (coordPrint == NULL) return;
 	int toPrint = *(int*)coordPrint;
-	printf("%d",toPrint);
+	printf("%d ",toPrint);
 }// END OF printCoordinate
 
 
