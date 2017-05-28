@@ -12,7 +12,7 @@ typedef struct Point_ {
 
 PPoint PointCreate(int Dimension){
 	//checking input
-	if (Dimension <= 0) return NULL;
+	if (Dimension < 0) return NULL;
 	PPoint newPoint = (PPoint)malloc(sizeof(POINT));
 	if (newPoint == NULL) return NULL;
 	newPoint->coordsList = ListCreate(cloneCoordinate,destroyCoordinate,compareCoordinate,printCoordinate);
@@ -47,7 +47,7 @@ int PointGetFirstCoordinate(PPoint point){
 	if (point == NULL) return 0;
 	if (point->coordsList == NULL) return 0;
 	//checking for empty point
-	if (ListIsEmpty(point->coordsList)) return 0;
+	if (ListIsEmpty(point->coordsList)== TRUE) return 0;
 
 	int* firstCoordinate = (int*)ListGetFirst(point->coordsList);
 	return *firstCoordinate;
@@ -59,7 +59,7 @@ int PointGetNextCoordinates(PPoint point){
 	if (point == NULL) return 0;
 	if (point->coordsList == NULL) return 0;
 	//checking for empty point
-	if (ListIsEmpty(point->coordsList)) return 0;
+	if (ListIsEmpty(point->coordsList)== TRUE) return 0;
 
 	int* nextCoordinate = (int*)ListGetNext(point->coordsList);
 	if (nextCoordinate == NULL){
@@ -80,6 +80,45 @@ void PointPrint(PPoint point){
 }
 
 
+int		PointGetDimension(PPoint point){
+	//checking input
+		if (point == NULL) return 0;
+		return point->dimension;
+}// End Of PointGetDimension
+
+int 	PointNumCoordinates(PPoint point){
+	if (point == NULL) return -1;
+	return ListNumElements(point->coordsList);
+}// End Of PointNumCoordinates
+
+BOOL	PointCompare(PPoint srcA, PPoint srcB){
+	//checking input
+	if (srcA == NULL || srcB == NULL) return FALSE;
+	if (srcA->dimension != srcB->dimension) return FALSE; //points has different dimension
+	return ListCompare(srcA->coordsList, srcB->coordsList);
+
+}// End Of PointCompare
+
+int 	PointsDistance(PPoint pointA ,PPoint pointB){
+	//checking input
+	if (pointA == NULL || pointB == NULL) return 1000;
+	if (pointA->dimension != pointB->dimension) return 1000; //points has different dimension
+	int coordsNumA = PointNumCoordinates(pointA);
+	int coordsNumB = PointNumCoordinates(pointB);
+	if (coordsNumA != coordsNumB) return 1000; //number of coordinates not equal
+	int sum = 0;
+	int Xk = PointGetFirstCoordinate(pointA);
+	int Yk = PointGetFirstCoordinate(pointB);
+	int i=0;
+	for (i =0; i < pointA->dimension ; i++ ){
+		sum += (Xk - Yk)*(Xk - Yk);
+		Xk = PointGetNextCoordinates(pointA);
+		Yk = PointGetNextCoordinates(pointB);
+	}
+	return sum;
+}
+
+////////// functions for creating  List /////////
 
 PElement cloneCoordinate(void* source_){
 	//check input
@@ -120,16 +159,6 @@ void printCoordinate(void* coordPrint){
 	printf("%d",toPrint);
 }// END OF printCoordinate
 
-int		PointGetDimension(PPoint point){
-	//checking input
-		if (point == NULL) return 0;
-		return point->dimension;
-}// End Of PointGetDimension
-
-int 	PointNumCoordinates(PPoint point){
-	if (point == NULL) return -1;
-	return ListNumElements(point->coordsList);
-}// End Of PointNumCoordinates
 
 ///////////////////////////////////////////////////////////
 
