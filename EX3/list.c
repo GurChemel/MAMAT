@@ -125,8 +125,8 @@ BOOL		ListCompare(PList list_a, PList list_b) {
 	if ((list_a == NULL) || (list_b == NULL)) return FALSE;
 	if (list_a->elementsNum != list_b->elementsNum) return FALSE;
 	if ((list_a->head == NULL) && (list_b->head == NULL)) return TRUE; // Both have 0 elements.
-	list_a->current = list_a->head->next;
-	list_b->current = list_b->head->next;
+	list_a->current = list_a->head;
+	list_b->current = list_b->head;
 	while (list_a->current != NULL) {
 		if (FALSE == list_a->compare_fun(list_a->current->element, list_b->current->element)) return FALSE;
 		list_a->current = list_a->current->next;
