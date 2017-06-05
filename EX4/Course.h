@@ -5,7 +5,7 @@
 class Course {
 	public:
 	//constructor & default constructor
-	Course(int courseNum = 0 ,char *courseName = "default", int hwNum = 0, int hwWeigh = 0);
+	Course(int courseNum = 0 ,const char *courseName = "default", int hwNum = 0, double hwWeigh = 0);
 	//class constant methods
 	int 	getNum() const;
 	char*	getName() const;

@@ -1,0 +1,7 @@
+#! /bin/bash
+
+if [[ $# -ne 1 ]]; then
+	echo "One String Only";
+	exit 1;
+fi
+echo ${1} | sed -n 's/[^[:alpha:]]\+//gp' | sed -n 's/\(.\)/\1\n/gp' ;
