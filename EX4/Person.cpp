@@ -6,14 +6,14 @@
 #include "Proj.h"
 #include "Person.h"
 
-Person::Person(int personID = 0, const char *personName = "Jane Doh"):
+Person::Person(int personID, const char *personName):
 	personID_(personID), personName_(strdup(personName)){
 	//personName_ = new char[MAX_LINE_SIZE];
 	//personName_ = strcpy(personName_, personName);
 }// End Of Constructor
 
 Person::~Person(){
-	delete personName_;
+	free(personName_);
 } // End Of Destructor
 
 int Person::getID() const{

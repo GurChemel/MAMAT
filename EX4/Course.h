@@ -27,7 +27,7 @@ class Course {
 
 	protected:
 	const int 		courseNum_;
-	const char*		courseName_;
+	char*		courseName_;
 	const int 		hwNum_;
 	const double 	hwWeigh_;
 	int 			examGrade;

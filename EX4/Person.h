@@ -5,7 +5,7 @@
 class Person {
 	public:
 	//constructor & default constructor
-	Person(int personID = 0 ,const char *personName = "Jane Doh");
+	Person(int personID,const char *personName);
 	//class constant methods
 	int 	getID() const;
 	char*	getName() const;
@@ -19,7 +19,7 @@ class Person {
 
 	protected:
 	const int 		personID_;
-	const char*		personName_;
+	char*		personName_;
 
 };
 

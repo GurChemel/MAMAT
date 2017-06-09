@@ -22,14 +22,14 @@ StArray::~StArray() {
 			delete StudentsArray_[i];
 		}
 	}
-	delete StudentsArray_;
+	delete[] StudentsArray_;
 }; // End Of Destructor
 
 bool StArray::printStudent(int studentID) const {
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
 		if (StudentsArray_[i] != NULL) {
-			if (StudentsArray_[i]->getID == studentID) {
-				StudentsArray_[i]->print;
+			if (StudentsArray_[i]->getID() == studentID) {
+				StudentsArray_[i]->print();
 				return true;
 			}
 		}
@@ -40,7 +40,7 @@ bool StArray::printStudent(int studentID) const {
 void StArray::printAll() const {
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
 		if (StudentsArray_[i] != NULL) {
-			StudentsArray_[i]->print;
+			StudentsArray_[i]->print();
 		}
 	}
 }; // End of printAll
@@ -55,12 +55,12 @@ bool StArray::addStudent(int studentID, char* studentName) {
 	return false;
 }; // End of addStudent
 
-bool StArray::addEE_Course(int studentID, int courseNum, char* courseName, int HwNum, int HwWeigh) {
+bool StArray::addEE_Course(int studentID, int courseNum, char* courseName, int HwNum, double HwWeigh) {
 	EE_Course* new_course = new EE_Course(courseNum, courseName, HwNum, HwWeigh);
 	if (new_course == NULL) return false;
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
 		if (StudentsArray_[i] != NULL) {
-			if (StudentsArray_[i]->getID == studentID) {
+			if (StudentsArray_[i]->getID() == studentID) {
 				StudentsArray_[i]->addEE_Course(new_course);
 				return true;
 			}
@@ -69,12 +69,12 @@ bool StArray::addEE_Course(int studentID, int courseNum, char* courseName, int H
 	return false;
 }; // End of addEE_Course
 
-bool StArray::addCS_Course(int studentID, int courseNum, char* courseName, int HwNum, int HwWeigh, bool HwTakef, char* courseBook) {
+bool StArray::addCS_Course(int studentID, int courseNum, char* courseName, int HwNum, double HwWeigh, bool HwTakef, char* courseBook) {
 	CS_Course* new_course = new CS_Course(courseNum, courseName, HwNum, HwWeigh, HwTakef, courseBook);
 	if (new_course == NULL) return false;
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
 		if (StudentsArray_[i] != NULL) {
-			if (StudentsArray_[i]->getID == studentID) {
+			if (StudentsArray_[i]->getID() == studentID) {
 				StudentsArray_[i]->addCS_Course(new_course);
 				return true;
 			}
@@ -86,7 +86,7 @@ bool StArray::addCS_Course(int studentID, int courseNum, char* courseName, int H
 bool StArray::setHwGrade(int studentID, int courseNum, int HwNum, int grade) {
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
 		if (StudentsArray_[i] != NULL) {
-			if (StudentsArray_[i]->getID == studentID) {
+			if (StudentsArray_[i]->getID() == studentID) {
 				CS_Course* CScurseToAddGrade = StudentsArray_[i]->getCS_Course(courseNum);
 				EE_Course* EEcurseToAddGrade = StudentsArray_[i]->getEE_Course(courseNum);
 				if ((CScurseToAddGrade == NULL) && (EEcurseToAddGrade == NULL)) return false;
@@ -103,7 +103,7 @@ bool StArray::setHwGrade(int studentID, int courseNum, int HwNum, int grade) {
 bool StArray::setExamGrade(int studentID, int courseNum, int grade) {
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
 		if (StudentsArray_[i] != NULL) {
-			if (StudentsArray_[i]->getID == studentID) {
+			if (StudentsArray_[i]->getID() == studentID) {
 				CS_Course* CScurseToAddGrade = StudentsArray_[i]->getCS_Course(courseNum);
 				EE_Course* EEcurseToAddGrade = StudentsArray_[i]->getEE_Course(courseNum);
 				if ((CScurseToAddGrade == NULL) && (EEcurseToAddGrade == NULL)) return false;
@@ -119,19 +119,20 @@ bool StArray::setExamGrade(int studentID, int courseNum, int grade) {
 
 bool StArray::setFactor(int courseNum, int factor) {
 	bool successFlag = false;
+	EE_Course* EEcurseToAddGrade = NULL;
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
 		if (StudentsArray_[i] != NULL) {
-			EE_Course* EEcurseToAddGrade = StudentsArray_[i]->getEE_Course(courseNum);
+			EEcurseToAddGrade = StudentsArray_[i]->getEE_Course(courseNum);
 			if (EEcurseToAddGrade != NULL) {
 				if (EEcurseToAddGrade->setFactor(factor) == true) successFlag = true; // False if failed, True if succeded.
 			}
 		}
 	}
-	return false;
+	return successFlag;
 }; // End of setFactor
 
 bool StArray::resetStArray() {
 	for (int i = 0; i<MAX_STUDENT_NUM; i++) {
-		StudentsArray_[i]->~Student;
+		StudentsArray_[i]->~Student();
 	}
 }; // End of resetStArray

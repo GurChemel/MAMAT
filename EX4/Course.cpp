@@ -1,10 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include <string>
+#include <string.h>
 
 #include "Proj.h"
 #include "Course.h"
+
+using std::cout;
+using std::endl;
 
 Course::Course(int courseNum,const char* courseName, int hwNum, double hwWeigh):
 courseNum_(courseNum),courseName_(strdup(courseName)),hwNum_(hwNum),hwWeigh_(hwWeigh){
@@ -16,8 +19,8 @@ courseNum_(courseNum),courseName_(strdup(courseName)),hwNum_(hwNum),hwWeigh_(hwW
 }// End Of Constructor
 
 Course::~Course(){
-	delete courseName_;
-	delete hwGrades;
+	free(courseName_);
+	delete[] hwGrades;
 } // End Of Destructor
 
 
@@ -52,7 +55,7 @@ double Course::getHwAverage() const{
 	for(int i = 0;i < hwNum_;i++){
 		sum += hwGrades[i]; //summing all Hw grades
 	}
-	avg = sum/hwNum_;
+	avg = sum/(double)hwNum_;
 	return avg;
 
 }// End Of getHwAverage
