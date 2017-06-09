@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include <string.h>
+#include <string>
 
 #include "Proj.h"
 #include "Course.h"
 
 Course::Course(int courseNum,const char* courseName, int hwNum, double hwWeigh):
-courseNum_(courseNum),courseName_(courseName),hwNum_(hwNum),hwWeigh_(hwWeigh){
+courseNum_(courseNum),courseName_(strdup(courseName)),hwNum_(hwNum),hwWeigh_(hwWeigh){
 	hwGrades = new int[hwNum]; //saving the exercise grades in an array
 	for (int i=0;i<hwNum;i++){
 		hwGrades[i] = 0; //initializing array
@@ -16,7 +16,8 @@ courseNum_(courseNum),courseName_(courseName),hwNum_(hwNum),hwWeigh_(hwWeigh){
 }// End Of Constructor
 
 Course::~Course(){
-	delete[] hwGrades;
+	delete courseName_;
+	delete hwGrades;
 } // End Of Destructor
 
 
