@@ -5,8 +5,8 @@ LIBS =
 OBJS = Course.o CS_Course.o EE_Course.o main.o  EE_Course.h Person.o StArray.o  Course.h EE_Course.h Student.o  EE_Course.h 
 RM = rm -f
 
-main: $(OBJS)
-	$(CCLINK) -o main $(OBJS) $(LIBS)
+student: $(OBJS)
+	$(CCLINK) -o student $(OBJS) $(LIBS)
 
 Course.o: Course.cpp Proj.h Course.h
 CS_Course.o: CS_Course.cpp Proj.h Course.h CS_Course.h
@@ -20,4 +20,4 @@ Student.o: Student.cpp Student.h Proj.h Person.h CS_Course.h Course.h \
  EE_Course.h
 
 clean:
-	$(RM) main *.o *.bak *~ "#"* core
+	$(RM) student *.o *.bak *~ "#"* core
