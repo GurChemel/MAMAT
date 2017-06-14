@@ -26,6 +26,7 @@ int EE_Course::getCourseGrade() const{
 	int grade = 0;
 	grade = Course::getCourseGrade() + factor;
 	if (grade > 100) grade = 100;
+	if (grade < 0) grade = 0;
 	return grade;
 
 }// End Of getCourseGrade
