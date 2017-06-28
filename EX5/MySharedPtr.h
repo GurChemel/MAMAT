@@ -9,6 +9,7 @@ class PointerCounter {
 private:
 	int count; // Reference count
 public:
+	PointerCounter() { count = 0 };
 	// Increment the reference count
 	void AddRef() { count++;}
 	// Return the reference count.
@@ -21,6 +22,12 @@ public:
 template<class T>
 class MySharedPtr {
 public:
+	// Empty Constructor:
+	MySharedPtr() : pData(NULL) {
+		Counter_ = new PointerCounter();
+		//cout << "Empty Constructor. Counter is: " << Counter_->Get() << endl;
+	};
+	
 	// Constructor:
 	MySharedPtr(T* ptr) : pData(ptr) {
 		Counter_ = new PointerCounter();

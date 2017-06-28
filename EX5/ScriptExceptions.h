@@ -22,20 +22,19 @@ using namespace std;
 
 #define UNEXPECTED(x)  ScriptException(x)
 
-class ScriptException : public exception
-{
+class ScriptException : public exception {
 public:
-	ScriptException(char* string) {
-		length = strlen(string);
+	ScriptException(const char* string) {
+		int length = strlen(string);
 		String_ = new char[length + 1];
-		String_ = strcp(String, string);
+		String_ = strcpy(String_, string);
 	}
 
-	~ScriptException() {
+	~ScriptException() throw() {
 		delete[] String_;
 	}
-	
-	char* what() {
+
+	virtual const char* what() const throw() {
 		return String_;
 	}
 
