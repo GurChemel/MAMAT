@@ -7,11 +7,9 @@ Matrix::Matrix(int rows, int cols, int val) {
 	elements_num = rows_*cols_;
 	Mat_ = new int[elements_num];
 	
-	int i, j;
-	for (i = 0; i < rows_; i++) {
-		for (j = 0; j < cols_; j++) {
-			Mat_[i*rows_+j] = val;
-		}
+	int i;
+	for (i = 0; i < elements_num; i++) {
+		Mat_[i] = val;
 	}
 
 };
@@ -31,7 +29,7 @@ Matrix::Matrix(int startVal, int endVal) {
 	int i, j;
 	for (i = 0; i < rows_; i++) {
 		for (j = 0; j < cols_; j++) {
-			Mat_[i*rows_+j] = startVal + j;
+			Mat_[i*cols_+j] = startVal + j;
 		}
 	}
 	
@@ -42,22 +40,22 @@ Matrix::Matrix(const Matrix& from) {
 	cols_ = from.cols_;
 	elements_num = from.elements_num;
 	Mat_ = new int[elements_num];
-	int i, j;
-	for (i = 0; i < rows_; i++) {
-		for (j = 0; j < cols_; j++) {
-			Mat_[i*rows_+j] = from.Mat_[i*rows_+j];
-		}
+	int i;
+	for (i = 0; i < elements_num; i++) {
+		Mat_[i] = from.Mat_[i];
 	}
+	/*for (i = 0; i < rows_; i++) {
+		for (j = 0; j < cols_; j++) {
+			Mat_[i*cols_+j] = from.Mat_[i*cols_+j];
+		}
+	}*/
 };
 
 VarPtr Matrix::Copy() const {
 	VarPtr pRet = VarPtr(new Matrix(rows_, cols_ , 0));
-	int i, j;
-	for (i = 0; i < rows_; i++) {
-		for (j = 0; j < cols_; j++) {
-			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] = Mat_[i*rows_+j];
-		}
+	int i;
+	for (i = 0; i < elements_num; i++) {
+		(*pRet)[i+1] = Mat_[i];
 	}
 	return pRet;
 };
@@ -70,7 +68,7 @@ VarPtr Matrix::Size() const {
 	VarPtr pRet = VarPtr(new Matrix(1, 2, 0));
 	IdxVec pos_vec = {1,1};
 	(*pRet)[pos_vec] = rows_;
-	IdxVec pos_vec = {1,2};
+	pos_vec = {1,2};
 	(*pRet)[pos_vec] = cols_;
 	return pRet;
 };
@@ -83,11 +81,10 @@ VarPtr Matrix::Size(int dim) const {
 
 VarPtr Matrix::Transpose() const {
 	VarPtr pRet = VarPtr(new Matrix(cols_, rows_, 0));
-	for (i = 0; i < cols_; i++) {
-		for (j = 0; j < rows_; j++) {
-			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] = Mat_[j][i];	// Indexes are transposed!
-		}
+	int i, row_num;
+	for (i = 0 ; i < elements_num ; i++){
+		row_num = i/cols_;
+		(*pRet)[i+1] = Mat_[(i%cols_)*rows_+row_num];
 	}
 	return pRet;
 };
@@ -129,52 +126,52 @@ VarPtr Matrix::Conv(VarPtr rhs) const
 
 
 int& Matrix::operator[](int idx) {
-	if ((idx < 1) || (idx > elements_num)) { throw INDEX_OUT_OF_RANGE; }
-	int row, col;
-	if ((idx%rows_) == 0) {
-		row = rows_ - 1;
-	}
-	else {
-		row = (idx%rows_) - 1;
-	}
-	col = (int)((idx - 1) / rows_);
-	return Mat_[row*rows_+col];
+	return Mat_[idx-1];
 };
 
 int& Matrix::operator[](IdxVec V) {
 	if ((V.size() != 2) || (V[0] < 1) || (V[0] > rows_) || (V[1] < 1) || (V[1] > cols_)) { throw INDEX_OUT_OF_RANGE; }
-	return Mat_[V[0]-1][V[1] - 1];
+	return Mat_[(V[0]-1)+(V[1] - 1)*rows_];
 };
 
+int Matrix::operator[](int idx) const{
+	return Mat_[idx-1];
+};
+
+int Matrix::operator[](IdxVec V) const {
+	if ((V.size() != 2) || (V[0] < 1) || (V[0] > rows_) || (V[1] < 1) || (V[1] > cols_)) { throw INDEX_OUT_OF_RANGE; }
+	return Mat_[(V[0]-1)+(V[1] - 1)*rows_];
+};
+
+VarPtr Matrix::operator+(const Variable& rhs) const {
+	return rhs + (*this);
+}
+
 VarPtr Matrix::operator+(const Scalar& rhs) const {
-
 	VarPtr pRet = VarPtr(new Matrix(*this));
-	int i, j;
-
-	for (i = 1; i <= rows_; i++) {
-		for (j = 1; j <= cols_; j++) {
-			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] += rhs;
-		}
+	int i;
+	for (i=1 ; i<= elements_num ; i++){
+		(*pRet)[i] += rhs[1];
 	}
 	return pRet;
 }
 
 VarPtr Matrix::operator+(const Matrix& rhs) const {
-
-	if ((rows_ != rhs.Size(1)) || (cols_ != rhs.Size(2))) { throw BAD_MAT_DIMS("+"); }
-
+	VarPtr pLhs_rows = rhs.Size(1);
+	VarPtr pLhs_cols = rhs.Size(2);
+	if ((rows_ != (*pLhs_rows)[1]) || (cols_ != (*pLhs_cols)[1])) { throw BAD_MAT_DIMS("+"); }
+	
 	VarPtr pRet = VarPtr(new Matrix(*this));
-	int i, j;
-
-	for (i = 1; i <= rows_; i++) {
-		for (j = 1; j <= cols_; j++) {
-			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] += rhs[resIdx];
-		}
+	int i;
+	for (i=1 ; i<= elements_num ; i++){
+		(*pRet)[i] += rhs[i];
 	}
 	return pRet;
 };
+
+VarPtr Matrix::operator*(const Variable& rhs) const {
+	return rhs * (*this);
+}
 
 VarPtr Matrix::operator*(const Scalar& rhs) const {
 	
@@ -184,33 +181,48 @@ VarPtr Matrix::operator*(const Scalar& rhs) const {
 	for (i = 1; i <= rows_; i++) {
 		for (j = 1; j <= cols_; j++) {
 			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] *= rhs;
+			(*pRet)[resIdx] *= rhs[1];
 		}
 	}
 	return pRet;
 };
 
-VarPtr Matrix::operator*(const Matrix& rhs) const {
-	
-	if (cols_ != rhs.Size(1)) { throw BAD_MAT_PROD; }
+VarPtr Matrix::operator*(const Matrix& lhs) const {
+	VarPtr pLhs_rows = lhs.Size(1);
+	VarPtr pLhs_cols = lhs.Size(2);
+	if (rows_ != (*pLhs_cols)[1]) { throw BAD_MAT_PROD; }
 
-	VarPtr pRet = VarPtr(new Matrix(rows_, rhs.Size(2),0));
+	VarPtr pRet = VarPtr(new Matrix( (*pLhs_rows)[1],cols_,0));
 	int i, j, k;
 
-	for (i = 1; i <= rows_; i++) {
-		for (j = 1; j <= rhs.Size(2); j++) {
-			for (k = 1; k <= cols_; k++) {
+	for (i = 1; i <= (*pLhs_rows)[1]; i++) {
+		for (j = 1; j <= cols_; j++) {
+			for (k = 1; k <= (*pLhs_cols)[1]; k++) {
 				IdxVec resIdx = { i,j };
 				IdxVec aIdx = { i,k };
 				IdxVec bIdx = { k,j };
-				(*pRet)[resIdx] += (*this)[aIdx] * rhs[bIdx];
+				(*pRet)[resIdx] += lhs[aIdx] * (*this)[bIdx];
 			}
 		}
 	}
 	return pRet;
 };
 
-// Until here.
+VarPtr Matrix::operator>(const Variable& rhs) const {
+	return rhs < (*this);
+}
+VarPtr Matrix::operator<(const Variable& rhs) const {
+	return rhs > (*this);
+}
+VarPtr Matrix::operator==(const Variable& rhs) const {
+	return rhs == (*this);
+}
+VarPtr Matrix::operator&&(const Variable& rhs) const {
+	return rhs == (*this);
+}
+VarPtr Matrix::operator||(const Variable& rhs) const {
+	return rhs == (*this);
+}
 
 VarPtr Matrix::operator>(const Scalar& rhs) const {
 	VarPtr pRet = VarPtr(new Matrix(rows_,cols_,0));
@@ -219,21 +231,23 @@ VarPtr Matrix::operator>(const Scalar& rhs) const {
 	for (i = 1; i <= rows_; i++) {
 		for (j = 1; j <= cols_; j++) {
 			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] = ((*this)[resIdx]>rhs);
+			(*pRet)[resIdx] = ((*this)[resIdx] > rhs[1]);
 		}
 	}
 	return pRet;
 };
 
 VarPtr Matrix::operator>(const Matrix& rhs) const {
-	if ((rows_ != rhs.Size(1)) || (cols_ != rhs.Size(2))) { throw BAD_MAT_DIMS(">/<"); }
+	VarPtr pLhs_rows = rhs.Size(1);
+	VarPtr pLhs_cols = rhs.Size(2);
+	if ((rows_ != (*pLhs_rows)[1]) || (cols_ != (*pLhs_cols)[1])) { throw BAD_MAT_DIMS(">/<"); }
 	VarPtr pRet = VarPtr(new Matrix(rows_, cols_, 0));
 	int i, j;
-
+	
 	for (i = 1; i <= rows_; i++) {
 		for (j = 1; j <= cols_; j++) {
 			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] = ((*this)[resIdx]>rhs[resIdx]);
+			(*pRet)[resIdx] = ((*this)[resIdx] > rhs[resIdx]);
 		}
 	}
 	return pRet;
@@ -246,21 +260,23 @@ VarPtr Matrix::operator<(const Scalar& rhs) const {
 	for (i = 1; i <= rows_; i++) {
 		for (j = 1; j <= cols_; j++) {
 			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] = ((*this)[resIdx]<rhs);
+			(*pRet)[resIdx] = ((*this)[resIdx] < rhs[1]);
 		}
 	}
 	return pRet;
 };
 
 VarPtr Matrix::operator<(const Matrix& rhs) const {
-	if ((rows_ != rhs.Size(1)) || (cols_ != rhs.Size(2))) { throw BAD_MAT_DIMS(">/<"); }
+	VarPtr pLhs_rows = rhs.Size(1);
+	VarPtr pLhs_cols = rhs.Size(2);
+	if ((rows_ != (*pLhs_rows)[1]) || (cols_ != (*pLhs_cols)[1])) { throw BAD_MAT_DIMS(">/<"); }
 	VarPtr pRet = VarPtr(new Matrix(rows_, cols_, 0));
 	int i, j;
 
 	for (i = 1; i <= rows_; i++) {
 		for (j = 1; j <= cols_; j++) {
 			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] = ((*this)[resIdx]<rhs[resIdx]);
+			(*pRet)[resIdx] = ((*this)[resIdx] < rhs[resIdx]);
 		}
 	}
 	return pRet;
@@ -273,14 +289,16 @@ VarPtr Matrix::operator==(const Scalar& rhs) const {
 	for (i = 1; i <= rows_; i++) {
 		for (j = 1; j <= cols_; j++) {
 			IdxVec resIdx = { i,j };
-			(*pRet)[resIdx] = ((*this)[resIdx]==rhs);
+			(*pRet)[resIdx] = ((*this)[resIdx] == rhs[1]);
 		}
 	}
 	return pRet;
 };
 
 VarPtr Matrix::operator==(const Matrix& rhs) const {
-	if ((rows_ != rhs.Size(1)) || (cols_ != rhs.Size(2))) { throw BAD_MAT_DIMS("=="); }
+	VarPtr pLhs_rows = rhs.Size(1);
+	VarPtr pLhs_cols = rhs.Size(2);
+	if ((rows_ != (*pLhs_rows)[1]) || (cols_ != (*pLhs_cols)[1])) { throw BAD_MAT_DIMS("=="); }
 	VarPtr pRet = VarPtr(new Matrix(rows_, cols_, 0));
 	int i, j;
 

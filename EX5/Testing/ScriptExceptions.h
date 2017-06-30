@@ -25,12 +25,12 @@ using namespace std;
 
 class ScriptException : public exception {
 public:
-	ScriptException(const char* string) {
-		int length = strlen(string);
+	ScriptException(const string str) {
+		int length = str.length();
 		String_ = new char[length + 1];
-		String_ = strcpy(String_, string);
+		String_ = strcpy(String_, str.c_str());
 	}
-
+	
 	~ScriptException() throw() {
 		delete[] String_;
 	}

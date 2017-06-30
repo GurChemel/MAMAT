@@ -9,6 +9,8 @@ public:
 	Scalar(int val) : Val_(val) {};
 	Scalar(const Scalar& from) : Val_(from.Val_) {};
 	
+	virtual bool IsScalar() const { return true;};
+	
 	/*virtual*/ VarPtr Conv(VarPtr rhs) const;
 	/*virtual*/ VarPtr Copy() const;
 	/*virtual*/ VarPtr NumElems() const;
@@ -18,31 +20,45 @@ public:
 	
 	/*virtual*/ int& operator[](int idx);
 	/*virtual*/ int& operator[](IdxVec V);
+	int operator[](int idx) const;
+	int operator[](IdxVec V) const;
 
-	VarPtr operator+(const Variable&) const { return NULL;};
+	VarPtr operator+(const Variable&) const;
 	VarPtr operator+(const Scalar&) const;
 	VarPtr operator+(const Matrix&) const;
 
+	VarPtr operator*(const Variable&) const;
 	VarPtr operator*(const Scalar&) const;
 	VarPtr operator*(const Matrix&) const;
 
+	VarPtr operator>(const Variable&) const;
 	VarPtr operator>(const Scalar&) const;
 	VarPtr operator>(const Matrix&) const;
 
+	VarPtr operator<(const Variable&) const;
 	VarPtr operator<(const Scalar&) const;
 	VarPtr operator<(const Matrix&) const;
 
+	VarPtr operator==(const Variable&) const;
 	VarPtr operator==(const Scalar&) const;
 	VarPtr operator==(const Matrix&) const;
 
+	VarPtr operator&&(const Variable&) const;
 	VarPtr operator&&(const Scalar&) const;
 	VarPtr operator&&(const Matrix&) const;
 
+	VarPtr operator||(const Variable&) const;
 	VarPtr operator||(const Scalar&) const;
 	VarPtr operator||(const Matrix&) const;
+
+	void Print(ostream& os) const{
+		os << Val_;
+	};
+	
 
 private:
 	int Val_;
 };
+
 
 #endif // _SCALAR_H_

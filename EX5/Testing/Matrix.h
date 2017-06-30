@@ -16,6 +16,8 @@ public:
 	};
 	// ToDo: complete class definition
 	
+	virtual bool IsScalar() const { return false;};
+	
 	/*virtual*/ VarPtr Conv(VarPtr rhs) const;
 	/*virtual*/ VarPtr Copy() const;
 	/*virtual*/ VarPtr NumElems() const;
@@ -25,38 +27,55 @@ public:
 
 	/*virtual*/ int& operator[](int idx);
 	/*virtual*/ int& operator[](IdxVec V);
+	int operator[](int idx) const;
+	int operator[](IdxVec V) const; 
 
-	VarPtr operator+(const Variable&) const {};
+	VarPtr operator+(const Variable&) const;
 	VarPtr operator+(const Scalar&) const;
 	VarPtr operator+(const Matrix&) const;
 
+	VarPtr operator*(const Variable&) const;
 	VarPtr operator*(const Scalar&) const;
 	VarPtr operator*(const Matrix&) const;
 
+	VarPtr operator>(const Variable&) const;
 	VarPtr operator>(const Scalar&) const;
 	VarPtr operator>(const Matrix&) const;
 
+	VarPtr operator<(const Variable&) const;
 	VarPtr operator<(const Scalar&) const;
 	VarPtr operator<(const Matrix&) const;
 
+	VarPtr operator==(const Variable&) const;
 	VarPtr operator==(const Scalar&) const;
 	VarPtr operator==(const Matrix&) const;
 
+	VarPtr operator&&(const Variable&) const;
 	VarPtr operator&&(const Scalar&) const;
 	VarPtr operator&&(const Matrix&) const;
 
+	VarPtr operator||(const Variable&) const;
 	VarPtr operator||(const Scalar&) const;
 	VarPtr operator||(const Matrix&) const;
 
-
+	void Print(ostream& os) const{
+		int i,j;
+		for (i=0;i<rows_;i++){
+			for (j=0;j<cols_;j++){
+				os << "(" << i << "," << j << ")" << i+j*rows_ << ": " << Mat_[i+j*rows_] << "\t";
+			}
+			if (i != (rows_-1)) {
+				os << "\n";
+			}
+		}
+	};
+	
 private:
 	int* Mat_;
 	int rows_;
 	int cols_;
 	int elements_num;
 };
-
-
 
 
 #endif // _MATRIX_H_

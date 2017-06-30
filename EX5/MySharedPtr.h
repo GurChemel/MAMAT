@@ -36,7 +36,7 @@ public:
 	};
 
 	// Copy Constructor:
-	MySharedPtr(MySharedPtr<T>& from) : pData(from.pData), Counter_(from.Counter_) {
+	MySharedPtr(const MySharedPtr<T>& from) : pData(from.pData), Counter_(from.Counter_) {
 		Counter_->AddRef();
 		//cout << "Copy Constructor. Counter is: " << Counter_->Get() << endl;
 	};
@@ -48,7 +48,7 @@ public:
 			delete pData;
 			delete Counter_;
 		};
-		cout << "destructor" << endl;
+		//cout << "destructor" << endl;
 	}
 
 	// Derefrancing overloading:
@@ -57,7 +57,7 @@ public:
 	T* get() { return pData; }
 
 	// Assignment operator:
-	MySharedPtr<T>& operator= (MySharedPtr<T>& from) {
+	MySharedPtr<T>& operator= (const MySharedPtr<T>& from) {
 		// Check if self assignment:
 		if (this != &from) {
 			if ((Counter_->Release()) == 0) {
@@ -75,8 +75,8 @@ public:
 	}
 
 	// Print operator:
-	friend ostream& operator<<(ostream& ro, const MySharedPtr& Ptr) {
-		ro << (Ptr.pData);
+	friend ostream& operator<<(ostream& ro, const MySharedPtr<T>& obj) {
+		obj.pData->Print(ro);
 		return ro;
 	}
 
