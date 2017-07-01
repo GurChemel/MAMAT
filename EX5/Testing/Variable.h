@@ -21,7 +21,7 @@ class Variable
 {
 public:
 	
-	~Variable() {};
+	virtual ~Variable() {};
 	// ToDo: complete class definition
 	
 	virtual VarPtr Conv(VarPtr rhs) const = 0;
