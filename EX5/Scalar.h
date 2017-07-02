@@ -8,6 +8,7 @@ class Scalar : public Variable
 public:
 	Scalar(int val) : Val_(val) {};
 	Scalar(const Scalar& from) : Val_(from.Val_) {};
+	~Scalar() {};
 	
 	virtual bool IsScalar() const { return true;};
 	
@@ -55,6 +56,9 @@ public:
 		os << Val_;
 	};
 	
+	VarPtr self_add() const{
+        return VarPtr(new Scalar(Val_*2));
+    };
 
 private:
 	int Val_;

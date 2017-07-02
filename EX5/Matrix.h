@@ -12,7 +12,7 @@ public:
 	Matrix(int startVal, int endVal);
 	Matrix(const Matrix& from);
 	~Matrix() {
-		delete[] Mat_;
+        delete[] Mat_;
 	};
 	// ToDo: complete class definition
 	
@@ -62,7 +62,7 @@ public:
 		int i,j;
 		for (i=0;i<rows_;i++){
 			for (j=0;j<cols_;j++){
-				os << "(" << i << "," << j << ")" << i+j*rows_ << ": " << Mat_[i+j*rows_] << "\t";
+				os << Mat_[i+j*rows_] << "\t";
 			}
 			if (i != (rows_-1)) {
 				os << "\n";

@@ -69,7 +69,8 @@ int Scalar::operator[](IdxVec V) const{
 // ###############################################
 
 VarPtr Scalar::operator+(const Variable& rhs) const {
-	return rhs + (*this);
+	if (&rhs == this) {return (*this).self_add();};
+    return rhs + (*this);
 }
 
 VarPtr Scalar::operator+(const Scalar& rhs) const {
@@ -97,12 +98,9 @@ VarPtr Scalar::operator*(const Scalar& rhs) const {
 VarPtr Scalar::operator*(const Matrix& rhs) const {
 	VarPtr mat_size_vec = rhs.Size();
 	VarPtr new_mat = rhs.Copy();
-	int i, j;
-	for (i = 1; i <= (*mat_size_vec)[1]; i++) {
-		for (j = 1; j <= (*mat_size_vec)[2]; j++) {
-			IdxVec resIdx = { i,j };
-			(*new_mat)[resIdx] = (*new_mat)[resIdx] * Val_;
-		}
+	int i;
+	for (i=1 ; i<= ((*mat_size_vec)[1]*(*mat_size_vec)[2]) ; i++){
+		(*new_mat)[i] *= Val_;
 	}
 	return new_mat;
 };
@@ -131,7 +129,6 @@ VarPtr Scalar::operator>(const Matrix& rhs) const {
 	VarPtr mat_size_vec = rhs.Size();
 	VarPtr new_mat = rhs.Copy();
 	int i, j;
-	cout << "s>m" << endl;
 	for (i = 1; i <= (*mat_size_vec)[1]; i++) {
 		for (j = 1; j <= (*mat_size_vec)[2]; j++) {
 			IdxVec resIdx = { i,j };
@@ -149,7 +146,6 @@ VarPtr Scalar::operator<(const Matrix& rhs) const {
 	VarPtr mat_size_vec = rhs.Size();
 	VarPtr new_mat = rhs.Copy();
 	int i, j;
-	cout << "s<m" << endl;
 	for (i = 1; i <= (*mat_size_vec)[1]; i++) {
 		for (j = 1; j <= (*mat_size_vec)[2]; j++) {
 			IdxVec resIdx = { i,j };
