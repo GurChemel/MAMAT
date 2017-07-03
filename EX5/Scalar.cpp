@@ -4,6 +4,12 @@
 
 using namespace std;
 
+// ###############################################
+// #
+// #	Functions:
+// #
+// ###############################################
+
 VarPtr Scalar::Copy() const {
 	return VarPtr(new Scalar(*this));
 };

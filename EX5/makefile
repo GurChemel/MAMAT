@@ -5,8 +5,8 @@ LIBS =
 OBJS = main.o  ScriptExceptions.h Matrix.o Scalar.o Variable.o Commands.o LineParser.o MamatScriptEngine.o VariablesMap.o
 RM = rm -f
 
-main: $(OBJS)
-	$(CPP) -g -Wall -std=c++0x -o main $(OBJS) $(LIBS)
+MamatScript: $(OBJS)
+	$(CPP) -g -Wall -std=c++0x -o MamatScript $(OBJS) $(LIBS)
 
 Commands.o: Commands.cpp Commands.h VariablesMap.h MySharedPtr.h \
  Variable.h Scalar.h Matrix.h LineParser.h ScriptExceptions.h

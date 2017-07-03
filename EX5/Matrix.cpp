@@ -1,12 +1,17 @@
 #include"Matrix.h"
 #include"ScriptExceptions.h"
 
+// ###############################################
+// #
+// #	Constructos:
+// #
+// ###############################################
+
 Matrix::Matrix(int rows, int cols, int val) {
 	rows_ = rows;
 	cols_ = cols;
 	elements_num = rows_*cols_;
 	Mat_ = new int[elements_num];
-	
 	int i;
 	for (i = 0; i < elements_num; i++) {
 		Mat_[i] = val;
@@ -50,6 +55,12 @@ Matrix::Matrix(const Matrix& from) {
 		}
 	}*/
 };
+
+// ###############################################
+// #
+// #	Functions:
+// #
+// ###############################################
 
 VarPtr Matrix::Copy() const {
 	VarPtr pRet = VarPtr(new Matrix(rows_, cols_ , 0));
@@ -124,6 +135,11 @@ VarPtr Matrix::Conv(VarPtr rhs) const
 	return pRet;
 }
 
+// ###############################################
+// #
+// #	Opertors: []
+// #
+// ###############################################
 
 int& Matrix::operator[](int idx) {
 	return Mat_[idx-1];
@@ -142,6 +158,12 @@ int Matrix::operator[](IdxVec V) const {
 	if ((V.size() != 2) || (V[0] < 1) || (V[0] > rows_) || (V[1] < 1) || (V[1] > cols_)) { throw INDEX_OUT_OF_RANGE; }
 	return Mat_[(V[0]-1)+(V[1] - 1)*rows_];
 };
+
+// ###############################################
+// #
+// #	Opertors: + *
+// #
+// ###############################################
 
 VarPtr Matrix::operator+(const Variable& rhs) const {
 	return rhs + (*this);
@@ -207,6 +229,12 @@ VarPtr Matrix::operator*(const Matrix& lhs) const {
 	}
 	return pRet;
 };
+
+// ###############################################
+// #
+// #	Opertors: > < ==
+// #
+// ###############################################
 
 VarPtr Matrix::operator>(const Variable& rhs) const {
 	return rhs < (*this);
@@ -310,6 +338,12 @@ VarPtr Matrix::operator==(const Matrix& rhs) const {
 	}
 	return pRet;
 };
+
+// ###############################################
+// #
+// #	Opertors: && ||
+// #
+// ###############################################
 
 VarPtr Matrix::operator&&(const Scalar& rhs) const { throw BAD_INPUT; };
 VarPtr Matrix::operator&&(const Matrix&) const { throw BAD_INPUT; };

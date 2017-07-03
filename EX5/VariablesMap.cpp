@@ -5,6 +5,13 @@
 
 using namespace std;
 
+// ###############################################
+// #
+// #	Temp vaariable handeling:
+// #
+// ###############################################
+
+// Creates a random string from 10 VALID_VAR_CHARS.
 void gen_random(string& s) {
     static const char alphanum[] = VALID_VAR_CHARS;
     char char_array[10];
@@ -17,6 +24,7 @@ void gen_random(string& s) {
 
 string VariablesMap::GetTmpVariable(){
 	gen_random(tmpName_);
+    // Make sure the name isn't taken and isn't saved:
     while ((valMap_.count(tmpName_) != 0) && (tmpName_ != Saved_)) {
         gen_random(tmpName_);
 	}
@@ -35,6 +43,12 @@ void VariablesMap::ClearTmpVars() {
 	}
 }
 
+// ###############################################
+// #
+// #	Map Manipulating functions:
+// #
+// ###############################################
+
 VarPtr& VariablesMap::operator[](const string& x) {
     if ( legal_name(x) == false ) { throw INVALID_VAR_NAME(x); };
 	if (valMap_.count(x) == 0) { valMap_.insert(std::make_pair(x,VarPtr(new Scalar(0)))) ;};
@@ -42,7 +56,7 @@ VarPtr& VariablesMap::operator[](const string& x) {
 }
 
 VarPtr& VariablesMap::at(const string& x) {
-    std::out_of_range oor("out_of_range");
+    std::out_of_range oor("out_of_range"); // Created for throwing if neeeded.
 	if (valMap_.count(x) == 0) { throw oor; };
 	return valMap_.at(x);
 }
@@ -56,11 +70,12 @@ bool legal_name(const string& x) {
     std::string::const_iterator iter;
 	string valid_chars = string(VALID_VAR_CHARS);
 	int found_pos;
-	for (iter = x.begin(); iter != x.end(); ++iter) {
-		found_pos = valid_chars.find(*iter);
+	// Iterate over the given name:
+    for (iter = x.begin(); iter != x.end(); ++iter) {
+		// Check if the current char is in the Valid Chars. if not then return false:
+        found_pos = valid_chars.find(*iter);
         if (found_pos == -1) { return false; };
 	}
-    //cout << "finished legal_name" << endl; 
 	return true;
 }
 

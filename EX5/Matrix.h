@@ -8,15 +8,17 @@
 class Matrix : public Variable
 {
 public:
-	Matrix(int rows, int cols, int val);
+	// Constructors:
+    Matrix(int rows, int cols, int val);
 	Matrix(int startVal, int endVal);
-	Matrix(const Matrix& from);
+	
+    // Copy Constructor:
+    Matrix(const Matrix& from);
+
+	// Destructor:
 	~Matrix() {
         delete[] Mat_;
 	};
-	// ToDo: complete class definition
-	
-	virtual bool IsScalar() const { return false;};
 	
 	/*virtual*/ VarPtr Conv(VarPtr rhs) const;
 	/*virtual*/ VarPtr Copy() const;

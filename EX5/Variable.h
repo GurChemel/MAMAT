@@ -20,9 +20,8 @@ IdxVec operator+(const IdxVec& lhs, const IdxVec& rhs);
 class Variable
 {
 public:
-	
+	// Virtual destructor:
 	virtual ~Variable() {};
-	// ToDo: complete class definition
 	
 	virtual VarPtr Conv(VarPtr rhs) const = 0;
 	virtual VarPtr Copy() const = 0;
@@ -63,9 +62,6 @@ public:
 	virtual int& operator[](int idx) = 0;
 	virtual int& operator[](IdxVec V) = 0;
 	
-	virtual bool IsScalar() const = 0;
-	
-
 };
 
 

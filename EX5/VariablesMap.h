@@ -17,6 +17,7 @@ using namespace std;
 
 class VariablesMap {
 public:
+    // Constructor:
 	VariablesMap() {
         Saved_ = "";
         tmp_counter = 0;
@@ -24,7 +25,6 @@ public:
 
 	void SetSavedName(const string& newSavedName) {
         Saved_ = newSavedName;
-        //valMap_[Saved_];
 	}
 	
 	string GetTmpVariable();
@@ -42,6 +42,7 @@ private:
 	string Saved_;
 };
 
+// Functions for simplifying implementation:
 bool legal_name(const string& x);
 void gen_random(string& s);
 

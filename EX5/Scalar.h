@@ -6,11 +6,14 @@
 class Scalar : public Variable
 {
 public:
-	Scalar(int val) : Val_(val) {};
+	// Constructor:
+    Scalar(int val) : Val_(val) {};
+
+	// Copy Constructor:
 	Scalar(const Scalar& from) : Val_(from.Val_) {};
+
+	// Destructor:
 	~Scalar() {};
-	
-	virtual bool IsScalar() const { return true;};
 	
 	/*virtual*/ VarPtr Conv(VarPtr rhs) const;
 	/*virtual*/ VarPtr Copy() const;
