@@ -24,7 +24,7 @@ class MySharedPtr {
 public:
 	// Empty Constructor:
 	MySharedPtr() : pData(NULL) {
-		Counter_ = new PointerCounter();
+		Counter_ = NULL;
 		//cout << "Empty Constructor. Counter is: " << Counter_->Get() << endl;
 	};
 	
@@ -43,10 +43,12 @@ public:
 
 	// Destructor:
 	~MySharedPtr() {
-        if ((Counter_->Release()) == 0) {
-            delete pData;
-			delete Counter_;
-		};
+        if (Counter_ != NULL) {
+            if ((Counter_->Release()) == 0) {
+                delete pData;
+                delete Counter_;
+            };
+        };
 		//cout << "destructor" << endl;
 	}
 
@@ -59,10 +61,12 @@ public:
 	MySharedPtr<T>& operator= (const MySharedPtr<T>& from) {
 		// Check if self assignment:
 		if (this != &from) {
-            if ((Counter_->Release()) == 0) {
-				//cout << "Assignment. Old counter is: " << Counter_->Get() << endl;
-				delete pData;
-				delete Counter_;
+            if (Counter_ != NULL) {
+                if ((Counter_->Release()) == 0) {
+                    //cout << "Assignment. Old counter is: " << Counter_->Get() << endl;
+                    delete pData;
+                    delete Counter_;
+                };
 			};
 
 			pData = from.pData;

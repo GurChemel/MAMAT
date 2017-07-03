@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for file in $1/*.$2; do
+    new_name=`echo $file | rev | cut -d "." -f 2- | rev`
+    mv ${file} ${new_name}.$3
+done
